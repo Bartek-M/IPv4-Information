@@ -1,0 +1,11 @@
+{
+  "name": "network-information",
+  "version": "1.0.0",
+  "description": "Information about network based on IPv4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bartosz Mroczkowski",
+  "license": "ISC"
+}
