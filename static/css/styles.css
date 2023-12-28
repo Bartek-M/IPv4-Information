@@ -65,10 +65,10 @@ button:active {
     gap: 0.5rem;
     flex-direction: column;
     width: calc(100% - 6rem);
-    height: calc(100% - 6rem);
+    height: calc(100% - 3rem);
     border: 0.5px solid var(--BORDER);
-    border-radius: 1rem;
-    margin: 1rem;
+    border-radius: 1rem 1rem 0 0;
+    margin: 1rem 1rem 0 1rem;
     padding: 2rem;
     background-color: rgba(0, 0, 0, 0.4);
 }

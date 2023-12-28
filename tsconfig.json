@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
         "target": "ES5",
-        "module": "commonjs",
+        "module": "ESNext",
         "strict": true,
-        "outDir": "./dist",
+        "outDir": "./static/js",
+        "removeComments": true,
         "skipLibCheck": true
     },
     "include": ["./src/**/*.ts"]
