@@ -1,5 +1,5 @@
 import { Network } from "./types"
-import { convertBinary, convertDecimal } from "./conversions.js"
+import { convertBinary, convertDecimal } from "./conversions"
 
 const networkClasses = {
     A: [0, 126, 8, "255.0.0.0"],
@@ -8,6 +8,10 @@ const networkClasses = {
     D: [224, 239, 0],
     E: [240, 254, 0],
     LOCAL: [127, 127, 8, "255.0.0.0"],
+}
+
+function getNetworkClass(): string {
+    return ""
 }
 
 function getAddr(ip: string[], mask: string[]): [string[], string[]] {
@@ -30,7 +34,15 @@ function getAddr(ip: string[], mask: string[]): [string[], string[]] {
     return [convertDecimal(networkAddr), convertDecimal(broadcastAddr)]
 }
 
-export function main(ip: string[], mask: string[]): Network {
+function getHosts(): [string[], string[]] {
+    return [[], []]
+}
+
+function getSubnets(): [number, number] {
+    return [0, 0]
+}
+
+export function main(ip: string[], mask: string[] = ["0", "0", "0", "0"]): Network {
     const ipBin = convertBinary(ip, 8)
     const maskBin = convertBinary(mask, 8)
 

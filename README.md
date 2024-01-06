@@ -1,19 +1,21 @@
-# Network Information
+# IPv4 Information
 Get information about network from IPv4 Address 
 
 ## Requirements
 - NodeJS 16 or above
-- Python 3.8 or above
 
 ## Setup
-Install dependencies and build JS
+Install dependencies
 ```bash
-pip install flask
 npm install -g typescript
-tsc
+npm install
 ```
 
-Run the server
+Build JS package
 ```bash
-python main.py
+npm run build
 ```
+
+Open `index.html` in your browser and get information about IPv4 addresses
+
+> NOTE: If you want to run a development version run `npm run dev` instead.

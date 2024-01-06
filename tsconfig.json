@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "target": "ES5",
-        "module": "ESNext",
+        "module":"CommonJS",
         "strict": true,
-        "outDir": "./static/js",
+        "outDir": "./dist/",
         "removeComments": true,
         "skipLibCheck": true
     },

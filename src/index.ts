@@ -1,5 +1,5 @@
 // IPv4 Information
-import { main } from "./network.js"
+import { main } from "./network"
 
 const hello: string = "IPv4 Information"
 console.log(hello)
