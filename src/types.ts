@@ -1,14 +1,39 @@
 export type Network = {
-    ip: number[]
-    mask: number[]
+    ip: Address
+    mask: Address
 
-    networkAddr?: string[]
-    broadcastAddr?: string[]
-    networkClass?: string
+    network?: Address
+    broadcast?: Address
+    networkClass?: NetworkClass | null
 
-    minHost?: number[]
-    maxHost?: number[]
+    minHost?: Address
+    maxHost?: Address
 
     subnetHosts?: number
     subnets?: number
+}
+
+export type NetworkClass = {
+    name: string
+
+    start: number
+    end: number
+
+    maskShort?: number
+    maskLong?: string
+}
+
+export type Address = {
+    dec: string[]
+    bin: string[]
+}
+
+export type NetworkBroadcast = {
+    network: Address
+    broadcast: Address
+}
+
+export type MinMaxHost = {
+    minHost: Address,
+    maxHost: Address
 }

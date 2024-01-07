@@ -1,20 +1,29 @@
-import { Network } from "./types"
+import { Address, MinMaxHost, Network, NetworkBroadcast, NetworkClass } from "./types"
 import { convertBinary, convertDecimal } from "./conversions"
 
-const networkClasses = {
-    A: [0, 126, 8, "255.0.0.0"],
-    B: [128, 191, 16, "255.255.0.0"],
-    C: [192, 223, 24, "255.255.255.0"],
-    D: [224, 239, 0],
-    E: [240, 254, 0],
-    LOCAL: [127, 127, 8, "255.0.0.0"],
+const networkClasses: NetworkClass[] = [
+    { name: "A", start: 0, end: 126, maskShort: 8, maskLong: "255.0.0.0" },
+    { name: "B", start: 128, end: 191, maskShort: 16, maskLong: "255.0.0.0" },
+    { name: "C", start: 192, end: 223, maskShort: 24, maskLong: "255.0.0.0" },
+    { name: "D", start: 224, end: 239 },
+    { name: "E", start: 240, end: 254 },
+    { name: "LOCAL", start: 127, end: 127, maskShort: 8, maskLong: "255.0.0.0" },
+]
+
+function getNetworkClass(ipFirst: number, maskGiven: Boolean = false): NetworkClass | null {
+    for (let i = 0; i < networkClasses.length; i++) {
+        let nClass: NetworkClass = networkClasses[i]
+
+        if (ipFirst < nClass.start || ipFirst > nClass.end) continue
+        if (!maskGiven && !nClass.maskShort) continue
+
+        return nClass
+    }
+
+    return null
 }
 
-function getNetworkClass(): string {
-    return ""
-}
-
-function getAddr(ip: string[], mask: string[]): [string[], string[]] {
+function getAddr(ip: string[], mask: string[]): NetworkBroadcast {
     let networkAddr: string[] = []
     let broadcastAddr: string[] = []
 
@@ -31,7 +40,23 @@ function getAddr(ip: string[], mask: string[]): [string[], string[]] {
         broadcastAddr.push(broadcastCurrent)
     }
 
-    return [convertDecimal(networkAddr), convertDecimal(broadcastAddr)]
+    return {
+        network: { dec: convertDecimal(networkAddr), bin: networkAddr },
+        broadcast: { dec: convertDecimal(broadcastAddr), bin: broadcastAddr },
+    }
+}
+
+function getMinMax(network: string[], broadcast: string[]): MinMaxHost {
+    var minHost = network
+    var maxHost = broadcast
+
+    minHost.push(String(parseInt(minHost.pop()!) + 1))
+    maxHost.push(String(parseInt(maxHost.pop()!) - 1))
+
+    return {
+        minHost: { dec: minHost, bin: convertBinary(minHost) },
+        maxHost: { dec: maxHost, bin: convertBinary(maxHost) },
+    }
 }
 
 function getHosts(): [string[], string[]] {
@@ -42,16 +67,20 @@ function getSubnets(): [number, number] {
     return [0, 0]
 }
 
-export function main(ip: string[], mask: string[] = ["0", "0", "0", "0"]): Network {
-    const ipBin = convertBinary(ip, 8)
-    const maskBin = convertBinary(mask, 8)
+export function main(ipDec: string[], maskDec: string[]): Network {
+    const ip: Address = { dec: ipDec, bin: convertBinary(ipDec, 8) }
+    const mask: Address = { dec: maskDec, bin: convertBinary(maskDec, 8) }
 
-    const addr = getAddr(ipBin, maskBin)
+    const nClass: NetworkClass | null = getNetworkClass(parseInt(ip.dec[0]), Boolean(maskDec))
+
+    const addr = getAddr(ip.bin, mask.bin)
+    const hostMinMax = getMinMax(addr.network.dec, addr.broadcast.dec)
 
     return {
-        ip: [192, 168, 0, 1],
-        mask: [255, 255, 255, 0],
-        networkAddr: addr[0],
-        broadcastAddr: addr[1]
+        ip: ip,
+        mask: mask,
+        networkClass: nClass,
+        ...addr,
+        ...hostMinMax,
     }
 }
