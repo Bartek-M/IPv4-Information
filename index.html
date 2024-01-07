@@ -10,35 +10,76 @@
     </head>
     <body>
         <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
+            <div class="container">
                 <span class="navbar-brand mb-0 h1">IPv4 Information</span>
             </div>
         </nav>
-        <form onsubmit="return false" style="width: fit-content">
-            <div class="d-inline-flex m-4 mb-3">
-                <div class="input-group">
-                    <span class="input-group-text bg-primary-subtle" style="width: 70px">IP</span>
-                    <input type="number" class="form-control" value="192" min="0" , max="255" />
-                    <input type="number" class="form-control" value="168" min="0" , max="255" />
-                    <input type="number" class="form-control" value="0" min="0" , max="255" />
-                    <input type="number" class="form-control" value="1" min="0" , max="255" />
+        <div class="container">
+            <div class="d-flex flex-wrap gap-5 justify-content-between py-4">
+                <form onsubmit="return false" style="width: 364px">
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">IP</span>
+                        <input type="number" class="form-control" value="192" min="0" , max="255" />
+                        <input type="number" class="form-control" value="168" min="0" , max="255" />
+                        <input type="number" class="form-control" value="0" min="0" , max="255" />
+                        <input type="number" class="form-control" value="1" min="0" , max="255" />
+                    </div>
+                    <div class="d-flex mb-3 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">MASK</span>
+                        <input type="number" class="form-control" value="255" min="0" , max="255" />
+                        <input type="number" class="form-control" value="255" min="0" , max="255" />
+                        <input type="number" class="form-control" value="255" min="0" , max="255" />
+                        <input type="number" class="form-control" value="0" min="0" , max="255" />
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm w-100" type="submit">Calculate</button>
+                </form>
+                <div style="width: max-content">
+                    <div class="btn-group mb-3">
+                        <input type="radio" class="btn-check" name="radioDecBin" id="radioDecimal" checked />
+                        <label class="btn btn-outline-primary btn-sm" for="radioDecimal">Decimal</label>
+
+                        <input type="radio" class="btn-check" name="radioDecBin" id="radioBinary" />
+                        <label class="btn btn-outline-primary btn-sm" for="radioBinary">Binary</label>
+                    </div>
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">IP</span>
+                        <span class="form-control">192.168.0.1</span>
+                    </div>
+                    <div class="d-flex mb-3 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">MASK</span>
+                        <span class="form-control">255.255.255.0 (/24)</span>
+                    </div>
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 100px">NETWORK</span>
+                        <span class="form-control">192.168.0.0</span>
+                    </div>
+                    <div class="d-flex mb-3 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 100px">BROADCAST</span>
+                        <span class="form-control">192.168.0.255</span>
+                    </div>
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">MIN</span>
+                        <span class="form-control">192.168.0.1</span>
+                    </div>
+                    <div class="d-flex mb-3 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 60px">MAX</span>
+                        <span class="form-control">192.168.0.254</span>
+                    </div>
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 125px">HOSTS</span>
+                        <span class="form-control">254</span>
+                    </div>
+                    <div class="d-flex mb-2 input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 125px">SUBNETS</span>
+                        <span class="form-control">1</span>
+                    </div>
+                    <div class="d-flex input-group">
+                        <span class="input-group-text bg-primary-subtle" style="width: 125px">HOST/SUBNET</span>
+                        <span class="form-control">254</span>
+                    </div>
                 </div>
             </div>
-            <br />
-            <div class="d-inline-flex ms-4 mb-3">
-                <div class="input-group">
-                    <span class="input-group-text bg-primary-subtle" style="width: 70px">MASK</span>
-                    <input type="number" class="form-control" value="255" min="0" , max="255" />
-                    <input type="number" class="form-control" value="255" min="0" , max="255" />
-                    <input type="number" class="form-control" value="255" min="0" , max="255" />
-                    <input type="number" class="form-control" value="0" min="0" , max="255" />
-                </div>
-            </div>
-            <br />
-            <div class="ps-4 pe-4">
-                <button class="btn btn-outline-primary btn-sm w-100" type="submit">Calculate</button>
-            </div>
-        </form>
+        </div>
         <script src="./dist/index.js"></script>
     </body>
 </html>
