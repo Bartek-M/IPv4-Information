@@ -1,10 +1,10 @@
-import { Address, MinMaxHost, Network, NetworkBroadcast, NetworkClass } from "./types"
+import { Address, HostSubnets, MinMaxHost, Network, NetworkBroadcast, NetworkClass } from "./types"
 import { convertBinary, convertDecimal } from "./conversions"
 
 const networkClasses: NetworkClass[] = [
     { name: "A", start: 0, end: 126, maskShort: 8, maskLong: "255.0.0.0" },
-    { name: "B", start: 128, end: 191, maskShort: 16, maskLong: "255.0.0.0" },
-    { name: "C", start: 192, end: 223, maskShort: 24, maskLong: "255.0.0.0" },
+    { name: "B", start: 128, end: 191, maskShort: 16, maskLong: "255.255.0.0" },
+    { name: "C", start: 192, end: 223, maskShort: 24, maskLong: "255.255.255.0" },
     { name: "D", start: 224, end: 239 },
     { name: "E", start: 240, end: 254 },
     { name: "LOCAL", start: 127, end: 127, maskShort: 8, maskLong: "255.0.0.0" },
@@ -15,7 +15,7 @@ function getNetworkClass(ipFirst: number, maskGiven: Boolean = false): NetworkCl
         let nClass: NetworkClass = networkClasses[i]
 
         if (ipFirst < nClass.start || ipFirst > nClass.end) continue
-        if (!maskGiven && !nClass.maskShort) continue
+        if (!maskGiven && !nClass.maskShort) return null
 
         return nClass
     }
@@ -23,17 +23,17 @@ function getNetworkClass(ipFirst: number, maskGiven: Boolean = false): NetworkCl
     return null
 }
 
-function getAddr(ip: string[], mask: string[]): NetworkBroadcast {
+function getAddr(ipBin: string[], maskBin: string[]): NetworkBroadcast {
     let networkAddr: string[] = []
     let broadcastAddr: string[] = []
 
-    for (let i = 0; i < ip.length; i++) {
+    for (let i = 0; i < ipBin.length; i++) {
         let networkCurrent = ""
         let broadcastCurrent = ""
 
-        for (let j = 0; j < ip[i].length; j++) {
-            networkCurrent += parseInt(mask[i][j]) === 1 ? ip[i][j] : "0"
-            broadcastCurrent += parseInt(mask[i][j]) === 1 ? ip[i][j] : "1"
+        for (let j = 0; j < ipBin[i].length; j++) {
+            networkCurrent += parseInt(maskBin[i][j]) === 1 ? ipBin[i][j] : "0"
+            broadcastCurrent += parseInt(maskBin[i][j]) === 1 ? ipBin[i][j] : "1"
         }
 
         networkAddr.push(networkCurrent)
@@ -46,9 +46,9 @@ function getAddr(ip: string[], mask: string[]): NetworkBroadcast {
     }
 }
 
-function getMinMax(network: string[], broadcast: string[]): MinMaxHost {
-    var minHost = network
-    var maxHost = broadcast
+function getMinMax(networkDec: string[], broadcastDec: string[]): MinMaxHost {
+    var minHost = [...networkDec]
+    var maxHost = [...broadcastDec]
 
     minHost.push(String(parseInt(minHost.pop()!) + 1))
     maxHost.push(String(parseInt(maxHost.pop()!) - 1))
@@ -59,12 +59,15 @@ function getMinMax(network: string[], broadcast: string[]): MinMaxHost {
     }
 }
 
-function getHosts(): [string[], string[]] {
-    return [[], []]
-}
+function getHostSubnets(maskBin: string[], nClass: NetworkClass | null): HostSubnets {
+    let subnets = 2 ** ((maskBin.join("").match(/1/g) || []).length - (nClass?.maskShort ? nClass.maskShort : 0))
+    let subnetHosts = 2 ** (maskBin.join("").match(/0/g) || []).length - 2
 
-function getSubnets(): [number, number] {
-    return [0, 0]
+    return {
+        subnets: subnets,
+        subnetHosts: subnetHosts,
+        totalHosts: subnets * subnetHosts
+    }
 }
 
 export function main(ipDec: string[], maskDec: string[]): Network {
@@ -72,9 +75,10 @@ export function main(ipDec: string[], maskDec: string[]): Network {
     const mask: Address = { dec: maskDec, bin: convertBinary(maskDec, 8) }
 
     const nClass: NetworkClass | null = getNetworkClass(parseInt(ip.dec[0]), Boolean(maskDec))
-
     const addr = getAddr(ip.bin, mask.bin)
+
     const hostMinMax = getMinMax(addr.network.dec, addr.broadcast.dec)
+    const hostSubnets = getHostSubnets(mask.bin, nClass)
 
     return {
         ip: ip,
@@ -82,5 +86,6 @@ export function main(ipDec: string[], maskDec: string[]): Network {
         networkClass: nClass,
         ...addr,
         ...hostMinMax,
+        ...hostSubnets
     }
 }

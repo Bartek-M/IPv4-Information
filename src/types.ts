@@ -2,15 +2,16 @@ export type Network = {
     ip: Address
     mask: Address
 
-    network?: Address
-    broadcast?: Address
-    networkClass?: NetworkClass | null
+    network: Address
+    broadcast: Address
+    networkClass: NetworkClass | null
 
-    minHost?: Address
-    maxHost?: Address
+    minHost: Address
+    maxHost: Address
 
-    subnetHosts?: number
-    subnets?: number
+    subnets: number
+    subnetHosts: number
+    totalHosts: number
 }
 
 export type NetworkClass = {
@@ -36,4 +37,10 @@ export type NetworkBroadcast = {
 export type MinMaxHost = {
     minHost: Address,
     maxHost: Address
+}
+
+export type HostSubnets = {
+    subnets: number
+    subnetHosts: number
+    totalHosts: number
 }
