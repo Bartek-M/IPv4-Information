@@ -1,15 +1,17 @@
 import { main } from "./network"
 import { Network } from "./types"
 
-function setText(id: string, text: any) {
-    document.getElementById(id)!.innerHTML = String(text)
-}
+const setText = (id: string, text: any) => (document.getElementById(id)!.innerHTML = String(text))
 
 function setInformation(network: Network, currentSet: "radioDecimal" | "radioBinary") {
-    const format = currentSet == "radioDecimal" ? "dec" : "bin" 
+    const format = currentSet == "radioDecimal" ? "dec" : "bin"
 
     setText("calculated-ip", network.ip[format].join("&#8203."))
-    setText("calculated-mask", network.mask[format].join("&#8203."))
+    setText("calculated-mask", network.mask[format].join("&#8203.") + (format == "dec" ? ` /${network.shortMask}` : ""))
+
+    setText("calculated-class", network.networkClass?.name)
+    setText("calculated-range", `${network.networkClass?.start} - ${network.networkClass?.end}`)
+    setText("calculated-short-mask", network.networkClass?.maskShort ? `/${network.networkClass?.maskShort}` : "-")
 
     setText("calculated-network", network.network[format].join("&#8203."))
     setText("calculated-broadcast", network.broadcast[format].join("&#8203."))
@@ -22,16 +24,18 @@ function setInformation(network: Network, currentSet: "radioDecimal" | "radioBin
     setText("calculated-totalHosts", network.totalHosts)
 }
 
-var information = main("10.10.0.1".split("."), "255.0.0.0".split("."))
+var information = main("10.124.0.1".split("."), "255.255.255.0".split("."))
 var currentSet: "radioDecimal" | "radioBinary" = "radioDecimal"
 
 document.getElementById("btn-calculate")!.addEventListener("click", () => {
     setInformation(information, currentSet)
 })
 
-document.getElementsByName("radioDecBin")?.forEach((el) => el.addEventListener("click", () => {
-    if (currentSet == el.id || (el.id != "radioDecimal" && el.id != "radioBinary")) return
+document.getElementsByName("radioDecBin")?.forEach((btn) =>
+    btn.addEventListener("click", () => {
+        if (currentSet == btn.id || (btn.id != "radioDecimal" && btn.id != "radioBinary")) return
 
-    currentSet = el.id
-    setInformation(information, currentSet)
-}))
+        currentSet = btn.id
+        setInformation(information, currentSet)
+    })
+)

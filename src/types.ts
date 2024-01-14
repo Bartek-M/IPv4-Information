@@ -1,6 +1,7 @@
 export type Network = {
     ip: Address
     mask: Address
+    shortMask: number
 
     network: Address
     broadcast: Address
