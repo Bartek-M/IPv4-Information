@@ -7,7 +7,7 @@ function setInformation(network: Network, currentSet: "radioDecimal" | "radioBin
     const format = currentSet == "radioDecimal" ? "dec" : "bin"
 
     setText("calculated-ip", network.ip[format].join("&#8203."))
-    setText("calculated-mask", network.mask[format].join("&#8203.") + (format == "dec" ? ` /${network.shortMask}` : ""))
+    setText("calculated-mask", network.mask[format].join("&#8203.") + (format == "dec" ? ` (/${network.shortMask})` : ""))
 
     setText("calculated-class", network.networkClass?.name)
     setText("calculated-range", `${network.networkClass?.start} - ${network.networkClass?.end}`)
@@ -24,10 +24,17 @@ function setInformation(network: Network, currentSet: "radioDecimal" | "radioBin
     setText("calculated-totalHosts", network.totalHosts)
 }
 
-var information = main("10.124.0.1".split("."), "255.255.255.0".split("."))
+var information = main("192.168.0.1".split("."), "255.255.255.0".split("."))
 var currentSet: "radioDecimal" | "radioBinary" = "radioDecimal"
 
 document.getElementById("btn-calculate")!.addEventListener("click", () => {
+    var ip: string[] = []
+    var mask: string[] = []
+
+    document.getElementsByName("ip").forEach((el) => ip.push((el as HTMLInputElement).value))
+    document.getElementsByName("mask").forEach((el) => mask.push((el as HTMLInputElement).value))
+
+    information = main(ip, mask)
     setInformation(information, currentSet)
 })
 
