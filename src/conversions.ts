@@ -1,4 +1,4 @@
-export function convertBinary(toConvert: string[], bit: number = 0): string[] {
+export function convertBinary(toConvert: string[], bit: number = 8): string[] {
     let converted: string[] = []
 
     for (const char of toConvert) {

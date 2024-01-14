@@ -53,6 +53,9 @@ function getMinMax(networkDec: string[], broadcastDec: string[]): MinMaxHost {
     minHost.push(String(parseInt(minHost.pop()!) + 1))
     maxHost.push(String(parseInt(maxHost.pop()!) - 1))
 
+    console.log(minHost, maxHost)
+    console.log(convertBinary(minHost), convertBinary(maxHost))
+
     return {
         minHost: { dec: minHost, bin: convertBinary(minHost) },
         maxHost: { dec: maxHost, bin: convertBinary(maxHost) },
@@ -71,13 +74,11 @@ function getHostSubnets(maskBin: string[], nClass: NetworkClass | null): HostSub
 }
 
 export function main(ipDec: string[], maskDec: string[]): Network {
-    const ip: Address = { dec: ipDec, bin: convertBinary(ipDec, 8) }
-    const mask: Address = { dec: maskDec, bin: convertBinary(maskDec, 8) }
+    const ip: Address = { dec: ipDec, bin: convertBinary(ipDec) }
+    const mask: Address = { dec: maskDec, bin: convertBinary(maskDec) }
 
     const nClass: NetworkClass | null = getNetworkClass(parseInt(ip.dec[0]), Boolean(maskDec))
     const addr = getAddr(ip.bin, mask.bin)
-
-    console.log(addr)
 
     const hostMinMax = getMinMax(addr.network.dec, addr.broadcast.dec)
     const hostSubnets = getHostSubnets(mask.bin, nClass)
