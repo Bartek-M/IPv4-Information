@@ -77,6 +77,8 @@ export function main(ipDec: string[], maskDec: string[]): Network {
     const nClass: NetworkClass | null = getNetworkClass(parseInt(ip.dec[0]), Boolean(maskDec))
     const addr = getAddr(ip.bin, mask.bin)
 
+    console.log(addr)
+
     const hostMinMax = getMinMax(addr.network.dec, addr.broadcast.dec)
     const hostSubnets = getHostSubnets(mask.bin, nClass)
 
