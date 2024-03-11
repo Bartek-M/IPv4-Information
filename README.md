@@ -1,5 +1,5 @@
 # IPv4 Information
-Get information about network from IPv4 Address 
+This website shows information about network from **IPv4** address. It uses **TypeScript** for calculations and **HTML** which is supplied by **Bootstrap** styles. This project was made to improve my **TS** knowlage and learn how **Bootstrap** really works. Check it out and get more information about your networks.
 
 ## Requirements
 - NodeJS 16 or above
