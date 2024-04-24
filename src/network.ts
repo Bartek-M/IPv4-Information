@@ -23,6 +23,18 @@ function getNetworkClass(ipFirst: number, maskGiven: Boolean = false): NetworkCl
     return null
 }
 
+function checkMask(maskBin: string[]): Boolean {
+    let mask = maskBin.join("")
+    let finish: Boolean = false
+
+    for (let i = 0; i < mask.length; i++) {
+        if (finish && mask[i] == "1") return true
+        if (mask[i] == "0") finish = true
+    }
+
+    return false
+}
+
 function getAddr(ipBin: string[], maskBin: string[]): NetworkBroadcast {
     let networkAddr: string[] = []
     let broadcastAddr: string[] = []
@@ -70,9 +82,12 @@ function getHostSubnets(shortMask: number, nClass: NetworkClass | null): HostSub
     }
 }
 
-export function main(ipDec: string[], maskDec: string[]): Network {
+export function main(ipDec: string[], maskDec: string[]): Network | false {
     const ip: Address = { dec: ipDec, bin: convertBinary(ipDec) }
     const mask: Address = { dec: maskDec, bin: convertBinary(maskDec) }
+
+    if (checkMask(mask.bin)) return false
+
     const shortMask = (mask.bin.join("").match(/1/g) || []).length
 
     const nClass: NetworkClass | null = getNetworkClass(parseInt(ip.dec[0]), Boolean(maskDec))
@@ -84,7 +99,7 @@ export function main(ipDec: string[], maskDec: string[]): Network {
     return {
         ip: ip,
         mask: mask,
-        shortMask: shortMask, 
+        shortMask: shortMask,
         networkClass: nClass,
         ...addr,
         ...hostMinMax,

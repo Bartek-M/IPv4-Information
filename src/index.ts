@@ -3,7 +3,13 @@ import { Network } from "./types"
 
 const setText = (id: string, text: any) => (document.getElementById(id)!.innerHTML = String(text))
 
-function setInformation(network: Network, currentSet: "radioDecimal" | "radioBinary") {
+function setInformation(network: Network | false, currentSet: "radioDecimal" | "radioBinary") {
+    if (!network) {
+        document.getElementById("mask-label")?.style.setProperty("--bs-primary-bg-subtle", "#8b0d19");
+        (document.getElementById("btn-calculate") as HTMLButtonElement).disabled = true
+        return
+    }
+
     const format = currentSet == "radioDecimal" ? "dec" : "bin"
 
     setText("calculated-ip", network.ip[format].join("&#8203."))
@@ -22,10 +28,16 @@ function setInformation(network: Network, currentSet: "radioDecimal" | "radioBin
     setText("calculated-subnets", network.subnets)
     setText("calculated-subnetHosts", network.subnetHosts)
     setText("calculated-totalHosts", network.totalHosts)
+
+    document.getElementById("mask-label")?.style.removeProperty("--bs-primary-bg-subtle");
 }
 
 var information = main("192.168.0.1".split("."), "255.255.255.0".split("."))
 var currentSet: "radioDecimal" | "radioBinary" = "radioDecimal"
+
+document.getElementsByName("mask").forEach((el) =>
+    el.addEventListener("change", () => { (document.getElementById("btn-calculate") as HTMLButtonElement).disabled = false })
+)
 
 document.getElementById("btn-calculate")!.addEventListener("click", () => {
     var ip: string[] = []
