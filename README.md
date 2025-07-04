@@ -19,3 +19,5 @@ npm run build
 Open `index.html` in your browser and get information about IPv4 addresses
 
 > NOTE: If you want to run a development version run `npm run dev` instead.
+
+<!-- GitAds-Verify: 3W5XEE19DZ3ANXDX673F5JNQTVYWDTTB -->
